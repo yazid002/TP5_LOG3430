@@ -27,6 +27,20 @@ class SimpleTasks(TaskSet):
         payload = {"message": "Hello, Locust!"}
         self.client.post("/echo", json=payload)
 
+
 class SimpleUser(HttpUser):
+    weight = 1 
     tasks = [SimpleTasks]
     wait_time = between(1, 5)  # Simulate a wait time between requests
+
+
+class HeavyTasks(TaskSet):
+    @task(1)
+    def heavy_request(self):
+        self.client.get("/heavy")
+
+class HeavyUser(HttpUser):
+    weight = 49
+    tasks = [HeavyTasks]  
+    wait_time = between(5, 10)  
+
